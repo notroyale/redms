@@ -1,14 +1,14 @@
 ﻿using HtmlAgilityPack;
+using RealEstateDataTool.Domain;
 using System.Net;
 using System.Xml.Linq;
 namespace RealEstateDataTool.Service
 {
     public class WebScraperService: IWebScraperService
     {
-
-        public string GetData()
+         List<string> pseudonyms = new List<string> { "House No.:", "Flat No.:", "Area" };
+        public AruodasAd GetAruodasAd()
         {
-
             string targetUrl = "TestData/testAd.html";
             HttpClientHandler handler = new HttpClientHandler
             {
@@ -28,33 +28,14 @@ namespace RealEstateDataTool.Service
 
                     if (nodes != null)
                     {
-                        foreach (HtmlNode node in nodes)
-                        {
-                            string dtText = node.InnerText.Trim();
-                            Console.Write($"{dtText}: ");
-                            HtmlNode ddNode = node.SelectSingleNode("following-sibling::dd[1]");
-                            if (ddNode != null)
-                            {
-                                string ddText = ddNode.InnerText.Trim();
-                                Console.WriteLine(ddText);
-                            }
-                            else
-                            {
-                                Console.WriteLine("No corresponding <dd> element found.");
+                        return MapEntryData(DateTime.Now, nodes, pseudonyms);
 
-                            }
-
-                        }
+             
                     }
-                    else
-                    {
+
                         Console.WriteLine("No data found.");
-                    }
-                    //}
-                    //else
-                    //{
-                    //    Console.WriteLine($"Request failed with status code: {response.StatusCode}");
-                    //}
+                    
+            
                 }
                 catch (Exception ex)
                 {
@@ -64,5 +45,35 @@ namespace RealEstateDataTool.Service
             }
 
         }
+
+        private AruodasAd MapEntryData(DateTime now, HtmlNodeCollection nodes, List<string> pseudonyms)
+        {
+            AruodasAd adEntry = new AruodasAd(Guid.NewGuid(), now);
+            Dictionary<string,string> testDict = new Dictionary<string,string>();
+
+            foreach (HtmlNode node in nodes)
+            {
+                string dtText = node.InnerText.Trim();
+                Console.Write($"{dtText}: ");
+                HtmlNode ddNode = node.SelectSingleNode("following-sibling::dd[1]");
+                if (ddNode != null)
+                {
+                    string ddText = ddNode.InnerText.Trim();
+                    testDict.Add(dtText, ddText);
+                    Console.WriteLine(ddText);
+                }
+                else
+                {
+                    Console.WriteLine("No corresponding <dd> element found.");
+
+                }
+
+            }
+            Console.WriteLine(testDict);
+
+            return adEntry;
+        }
+
+
     }
 }

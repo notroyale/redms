@@ -1,7 +1,9 @@
-﻿namespace RealEstateDataTool.Service
+﻿using RealEstateDataTool.Domain;
+
+namespace RealEstateDataTool.Service
 {
     public interface IWebScraperService
     {
-        string GetData();
+        AruodasAd GetAruodasAd();
     }
 }
