@@ -1,0 +1,46 @@
+ public async Task<PagedList<ObservationAuthorisation>> GetAllBaseAsync(string? searchTerm, string? sortColumn, string? sortOrder, int page, int pageSize, Dictionary<int, AccessControl> accessControls)
+ {
+     IQueryable<Observation> observationsQuery = _context.Observations;
+
+     observationsQuery = observationsQuery.Where(x => !x.Deleted && x.Submitted);
+
+     IQueryable<ObservationAuthorisation> oa = Enumerable.Empty<ObservationAuthorisation>().AsQueryable();
+     List<ObservationAuthorisation> testResult = new List<ObservationAuthorisation>();
+     IQueryable<ObservationAuthorisation> oa2;
+     foreach (var item in accessControls.Keys)
+     {
+         oa = observationsQuery.Where(x => item == x.BusinessUnitId)
+         .Select(x => new ObservationAuthorisation(new Observation()
+         {
+             Id = x.Id,
+             Title = x.Title,
+             CategoryId = x.CategoryId,
+             Category = x.Category,
+             CreationDate = x.CreationDate,
+             GradeID = x.GradeID,
+             RiskOwner = x.RiskOwner,
+             CreationUser = x.CreationUser,
+             ClosureDate = x.ClosureDate,
+             Deadline = x.Deadline,
+             StatusID = x.StatusID,
+             RAGStatusID = x.RAGStatusID,
+             RAGStatus = x.RAGStatus,
+             Status = x.Status,
+             DateIdentified = x.Deadline,
+             RevisedDeadline = x.RevisedDeadline,
+             BusinessUnit = x.BusinessUnit,
+         }, accessControls[item].AdminAccess, accessControls[item].ApproverAccess, accessControls[item].CommentAccess, accessControls[item].EditAccess, accessControls[item].ViewAccess));
+         testResult.AddRange(oa.Select(y => y).ToList());
+
+
+     }
+
+
+
+     var observations = await PagedList<ObservationAuthorisation>.CreateAsync(
+         testResult.AsQueryable(),
+         page,
+         pageSize);
+
+     return observations;
+ }
