@@ -1,0 +1,1317 @@
+USE [RiskManagement_Newest]
+GO
+/****** Object:  Table [History].[ObservationActions]    Script Date: 2024-07-11 12:18:40 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [History].[ObservationActions](
+	[ID] [int] NOT NULL,
+	[ActionTitle] [nvarchar](max) NOT NULL,
+	[ActionSummary] [nvarchar](max) NOT NULL,
+	[BusinessAreaID] [int] NULL,
+	[ObservationID] [int] NOT NULL,
+	[Assignee] [nvarchar](10) NULL,
+	[Deadline] [datetime2](7) NOT NULL,
+	[CreationUser] [nvarchar](10) NULL,
+	[CreationDate] [datetime2](7) NOT NULL,
+	[ModifiedUser] [nvarchar](10) NULL,
+	[ModifiedDate] [datetime2](7) NOT NULL,
+	[ActionStatus] [int] NOT NULL,
+	[ClosureDate] [datetime2](7) NULL,
+	[ClosureUser] [nvarchar](10) NULL,
+	[TaxonomyLevel3ID] [int] NULL,
+	[ActionComment1LoD] [nvarchar](max) NULL,
+	[ActionComment1LoDDate] [datetime2](7) NULL,
+	[ActionComment1LODUser] [nvarchar](10) NULL,
+	[ActivityOwner] [varchar](10) NULL,
+	[PeriodStart] [datetime2](7) NOT NULL,
+	[PeriodEnd] [datetime2](7) NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationActions]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationActions](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ActionTitle] [nvarchar](max) NOT NULL,
+	[ActionSummary] [nvarchar](max) NOT NULL,
+	[BusinessAreaID] [int] NULL,
+	[ObservationID] [int] NOT NULL,
+	[Assignee] [nvarchar](10) NULL,
+	[Deadline] [datetime2](7) NOT NULL,
+	[CreationUser] [nvarchar](10) NULL,
+	[CreationDate] [datetime2](7) NOT NULL,
+	[ModifiedUser] [nvarchar](10) NULL,
+	[ModifiedDate] [datetime2](7) NOT NULL,
+	[ActionStatus] [int] NOT NULL,
+	[ClosureDate] [datetime2](7) NULL,
+	[ClosureUser] [nvarchar](10) NULL,
+	[TaxonomyLevel3ID] [int] NULL,
+	[ActionComment1LoD] [nvarchar](max) NULL,
+	[ActionComment1LoDDate] [datetime2](7) NULL,
+	[ActionComment1LODUser] [nvarchar](10) NULL,
+	[ActivityOwner] [varchar](10) NULL,
+	[PeriodStart] [datetime2](7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
+	[PeriodEnd] [datetime2](7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
+ CONSTRAINT [PK_ObservationActions] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+	PERIOD FOR SYSTEM_TIME ([PeriodStart], [PeriodEnd])
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+WITH
+(
+SYSTEM_VERSIONING = ON (HISTORY_TABLE = [History].[ObservationActions])
+)
+GO
+/****** Object:  Table [History].[ObservationLegalEntities]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [History].[ObservationLegalEntities](
+	[ID] [int] NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[LegalEntityID] [int] NOT NULL,
+	[PeriodStart] [datetime2](7) NOT NULL,
+	[PeriodEnd] [datetime2](7) NOT NULL,
+	[ModifiedBy] [varchar](10) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationLegalEntities]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationLegalEntities](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[LegalEntityID] [int] NOT NULL,
+	[PeriodStart] [datetime2](7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
+	[PeriodEnd] [datetime2](7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [PK_ObservationLegalEntities] PRIMARY KEY CLUSTERED 
+(
+	[ObservationID] ASC,
+	[LegalEntityID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+	PERIOD FOR SYSTEM_TIME ([PeriodStart], [PeriodEnd])
+) ON [PRIMARY]
+WITH
+(
+SYSTEM_VERSIONING = ON (HISTORY_TABLE = [History].[ObservationLegalEntities])
+)
+GO
+/****** Object:  Table [History].[ObservationBusinessAreas]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [History].[ObservationBusinessAreas](
+	[ID] [int] NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[BusinessAreaID] [int] NULL,
+	[CountryID] [int] NOT NULL,
+	[PeriodStart] [datetime2](7) NOT NULL,
+	[PeriodEnd] [datetime2](7) NOT NULL,
+	[ModifiedBy] [varchar](10) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationBusinessAreas]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationBusinessAreas](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[BusinessAreaID] [int] NULL,
+	[CountryID] [int] NOT NULL,
+	[PeriodStart] [datetime2](7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
+	[PeriodEnd] [datetime2](7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [PK_ObservationBusinessAreas] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+	PERIOD FOR SYSTEM_TIME ([PeriodStart], [PeriodEnd])
+) ON [PRIMARY]
+WITH
+(
+SYSTEM_VERSIONING = ON (HISTORY_TABLE = [History].[ObservationBusinessAreas])
+)
+GO
+/****** Object:  Table [History].[ObservationTaxonomies]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [History].[ObservationTaxonomies](
+	[ObservationID] [int] NOT NULL,
+	[TaxonomyID] [int] NOT NULL,
+	[PeriodStart] [datetime2](7) NOT NULL,
+	[PeriodEnd] [datetime2](7) NOT NULL,
+	[ModifiedBy] [varchar](10) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationTaxonomies]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationTaxonomies](
+	[ObservationID] [int] NOT NULL,
+	[TaxonomyID] [int] NOT NULL,
+	[PeriodStart] [datetime2](7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
+	[PeriodEnd] [datetime2](7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
+	[ModifiedBy] [varchar](10) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ObservationID] ASC,
+	[TaxonomyID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+	PERIOD FOR SYSTEM_TIME ([PeriodStart], [PeriodEnd])
+) ON [PRIMARY]
+WITH
+(
+SYSTEM_VERSIONING = ON (HISTORY_TABLE = [History].[ObservationTaxonomies])
+)
+GO
+/****** Object:  Table [History].[ObservationRegulations]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [History].[ObservationRegulations](
+	[ID] [int] NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[RegulationID] [int] NOT NULL,
+	[RegulationComment] [varchar](250) NULL,
+	[PeriodStart] [datetime2](7) NOT NULL,
+	[PeriodEnd] [datetime2](7) NOT NULL,
+	[ModifiedBy] [varchar](10) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationRegulations]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationRegulations](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[RegulationID] [int] NOT NULL,
+	[RegulationComment] [varchar](250) NULL,
+	[PeriodStart] [datetime2](7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
+	[PeriodEnd] [datetime2](7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [PK_ObservationRegulations] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+	PERIOD FOR SYSTEM_TIME ([PeriodStart], [PeriodEnd])
+) ON [PRIMARY]
+WITH
+(
+SYSTEM_VERSIONING = ON (HISTORY_TABLE = [History].[ObservationRegulations])
+)
+GO
+/****** Object:  Table [History].[ObservationSelfRaisedIssue]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [History].[ObservationSelfRaisedIssue](
+	[ID] [int] NOT NULL,
+	[IsSelfRaised] [bit] NULL,
+	[Justification] [varchar](250) NULL,
+	[ObservationID] [int] NULL,
+	[PeriodStart] [datetime2](7) NOT NULL,
+	[PeriodEnd] [datetime2](7) NOT NULL,
+	[ModifiedBy] [varchar](10) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationSelfRaisedIssue]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationSelfRaisedIssue](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[IsSelfRaised] [bit] NULL,
+	[Justification] [varchar](250) NULL,
+	[ObservationID] [int] NULL,
+	[PeriodStart] [datetime2](7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
+	[PeriodEnd] [datetime2](7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [PK_ObservationSelfRaisedIssue] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+	PERIOD FOR SYSTEM_TIME ([PeriodStart], [PeriodEnd])
+) ON [PRIMARY]
+WITH
+(
+SYSTEM_VERSIONING = ON (HISTORY_TABLE = [History].[ObservationSelfRaisedIssue])
+)
+GO
+/****** Object:  Table [History].[ObservationFiles]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [History].[ObservationFiles](
+	[ID] [int] NOT NULL,
+	[Filename] [nvarchar](max) NULL,
+	[Deleted] [bit] NULL,
+	[ObservationID] [int] NOT NULL,
+	[Description] [nvarchar](max) NULL,
+	[UploadUser] [nvarchar](10) NULL,
+	[UploadDate] [datetime] NULL,
+	[ModifiedUser] [nvarchar](10) NULL,
+	[ModifiedDate] [datetime] NULL,
+	[GDPR] [bit] NOT NULL,
+	[Content] [varbinary](max) NULL,
+	[RetentionPeriod] [int] NOT NULL,
+	[LoD] [varchar](20) NULL,
+	[PeriodStart] [datetime2](7) NOT NULL,
+	[PeriodEnd] [datetime2](7) NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationFiles]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationFiles](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Filename] [nvarchar](max) NULL,
+	[Deleted] [bit] NULL,
+	[ObservationID] [int] NOT NULL,
+	[Description] [nvarchar](max) NULL,
+	[UploadUser] [nvarchar](10) NULL,
+	[UploadDate] [datetime] NULL,
+	[ModifiedUser] [nvarchar](10) NULL,
+	[ModifiedDate] [datetime] NULL,
+	[GDPR] [bit] NOT NULL,
+	[Content] [varbinary](max) NULL,
+	[RetentionPeriod] [int] NOT NULL,
+	[LoD] [varchar](20) NULL,
+	[PeriodStart] [datetime2](7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
+	[PeriodEnd] [datetime2](7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
+ CONSTRAINT [PK_ObservationFiles] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+	PERIOD FOR SYSTEM_TIME ([PeriodStart], [PeriodEnd])
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+WITH
+(
+SYSTEM_VERSIONING = ON (HISTORY_TABLE = [History].[ObservationFiles])
+)
+GO
+/****** Object:  Table [History].[ObservationRegCategories]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [History].[ObservationRegCategories](
+	[ID] [int] NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[RegulatoryCategoryID] [int] NOT NULL,
+	[PeriodStart] [datetime2](7) NOT NULL,
+	[PeriodEnd] [datetime2](7) NOT NULL,
+	[ModifiedBy] [varchar](10) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationRegCategories]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationRegCategories](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[RegulatoryCategoryID] [int] NOT NULL,
+	[PeriodStart] [datetime2](7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
+	[PeriodEnd] [datetime2](7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [PK_ObservationRegCategories] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+	PERIOD FOR SYSTEM_TIME ([PeriodStart], [PeriodEnd])
+) ON [PRIMARY]
+WITH
+(
+SYSTEM_VERSIONING = ON (HISTORY_TABLE = [History].[ObservationRegCategories])
+)
+GO
+/****** Object:  Table [dbo].[AuditLog]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AuditLog](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[ModifiedBy] [nvarchar](6) NOT NULL,
+	[DateModifed] [datetime] NOT NULL,
+	[Action] [varchar](20) NOT NULL,
+	[Field] [nvarchar](400) NULL,
+	[OldValue] [nvarchar](max) NULL,
+	[NewValue] [nvarchar](max) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AuditTrail]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AuditTrail](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[AuditUser] [nvarchar](50) NULL,
+	[AuditDate] [datetime2](7) NOT NULL,
+	[ActionType] [nvarchar](20) NULL,
+	[FieldName] [nvarchar](max) NULL,
+	[OldValue] [nvarchar](max) NULL,
+	[NewValue] [nvarchar](max) NULL,
+	[ObservationID] [int] NULL,
+ CONSTRAINT [PK_AuditTrail] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AuditTrailAction]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AuditTrailAction](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_AuditTrailAction] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AuthorisationAccessPermissions]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AuthorisationAccessPermissions](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ViewAccess] [bit] NOT NULL,
+	[EditAccess] [bit] NOT NULL,
+	[CommentAccess] [bit] NOT NULL,
+	[AuthorisationID] [int] NOT NULL,
+	[ApproverAccess] [bit] NOT NULL,
+	[AdminAccess] [bit] NOT NULL,
+ CONSTRAINT [PK_RoleAccess_Permissions] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AuthorisationBusinessAreas]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AuthorisationBusinessAreas](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[AuthorisationID] [int] NOT NULL,
+	[BusinessAreaID] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC,
+	[AuthorisationID] ASC,
+	[BusinessAreaID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AuthorisationBusinessUnits]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AuthorisationBusinessUnits](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[AuthorisationID] [int] NOT NULL,
+	[BusinessUnitID] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC,
+	[AuthorisationID] ASC,
+	[BusinessUnitID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AuthorisationLegalEntities]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AuthorisationLegalEntities](
+	[AuthorisationID] [int] NOT NULL,
+	[LegalEntityID] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[AuthorisationID] ASC,
+	[LegalEntityID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AuthorisationRoles]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AuthorisationRoles](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[AuthorisationID] [int] NOT NULL,
+	[RoleID] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC,
+	[AuthorisationID] ASC,
+	[RoleID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Authorisations]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Authorisations](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[Description] [nvarchar](250) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[ShortName] [nvarchar](100) NULL,
+ CONSTRAINT [PK_Authorizations] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[BusinessArea]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BusinessArea](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[BusinessUnitID] [int] NOT NULL,
+	[LegalEntity] [bit] NOT NULL,
+	[IsDefault] [bit] NOT NULL,
+ CONSTRAINT [PK_BusinessArea] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[BusinessAreaToBusinessUnit]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BusinessAreaToBusinessUnit](
+	[BusinessAreaID] [int] NOT NULL,
+	[BusinessUnitID] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[BusinessAreaID] ASC,
+	[BusinessUnitID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[BusinessUnit]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BusinessUnit](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Code] [nvarchar](10) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_BusinessUnit] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Country]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Country](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[IsActive] [bit] NULL,
+ CONSTRAINT [PK_Country] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[FieldHelpText]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[FieldHelpText](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[FieldName] [varchar](255) NULL,
+	[HelpTextValue] [text] NULL,
+	[ForNames] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Grades]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Grades](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](150) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_Grades] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ImpactRating]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ImpactRating](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Value] [int] NOT NULL,
+	[Description] [nvarchar](max) NULL,
+ CONSTRAINT [PK_ImpactRating] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[LegalEntity]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[LegalEntity](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](200) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[LegalEntityToBusinessUnit]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[LegalEntityToBusinessUnit](
+	[LegalEntityID] [int] NOT NULL,
+	[BusinessUnitID] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[LegalEntityID] ASC,
+	[BusinessUnitID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[LikelihoodRating]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[LikelihoodRating](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Value] [int] NOT NULL,
+	[Description] [nvarchar](max) NULL,
+ CONSTRAINT [PK_LikelihoodRating] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[LinesOfDefense]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[LinesOfDefense](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[Description] [nvarchar](250) NOT NULL,
+	[Line] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_LevelsOfDefense] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Observation]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Observation](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Title] [nvarchar](400) NOT NULL,
+	[StatusID] [int] NOT NULL,
+	[Summary] [nvarchar](max) NOT NULL,
+	[Recommendation] [nvarchar](max) NULL,
+	[Comment] [nvarchar](max) NULL,
+	[ClosureJustification] [nvarchar](max) NULL,
+	[Assignee] [nvarchar](10) NOT NULL,
+	[CreationUser] [nvarchar](10) NULL,
+	[CreationDate] [datetime2](7) NOT NULL,
+	[ModifiedUser] [nvarchar](10) NULL,
+	[ModifiedDate] [datetime2](7) NOT NULL,
+	[ClosureUser] [nvarchar](50) NULL,
+	[ClosureDate] [datetime2](7) NULL,
+	[Deadline] [datetime2](7) NULL,
+	[RiskAssessmentID] [int] NULL,
+	[GroupObservation] [int] NOT NULL,
+	[BusinessUnitID] [int] NOT NULL,
+	[GroupObservationID] [int] NULL,
+	[CategoryID] [int] NOT NULL,
+	[ActivityOwner] [nvarchar](10) NOT NULL,
+	[ProposedPlan] [nvarchar](max) NULL,
+	[RegistrationNumber] [nvarchar](50) NULL,
+	[RiskOwner] [nvarchar](10) NOT NULL,
+	[BusinessLine] [nvarchar](max) NULL,
+	[Directive] [nvarchar](max) NULL,
+	[Submitted] [bit] NOT NULL,
+	[Deleted] [bit] NOT NULL,
+	[Comment1LoD] [nvarchar](max) NULL,
+	[Comment1LoDDate] [datetime] NULL,
+	[Comment1LODUser] [nvarchar](10) NULL,
+	[RAGStatusID] [int] NULL,
+	[MitigationActionComment] [nvarchar](200) NULL,
+	[CancellationDate] [datetime] NULL,
+	[RiskAcceptanceDate] [datetime] NULL,
+	[DeadlineExtensionDate] [datetime] NULL,
+	[DateIdentified] [datetime] NULL,
+	[RevisedDeadline] [datetime] NULL,
+	[DeadlineExtensionJustification] [nvarchar](max) NULL,
+	[ObservationCategoryExplanation] [nvarchar](max) NULL,
+	[CancellationComment] [nvarchar](max) NULL,
+	[SubmittedForClosure] [bit] NOT NULL,
+ CONSTRAINT [PK_Observation] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Observation_Changes_Log]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Observation_Changes_Log](
+	[LogID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NULL,
+	[ModifiedUser] [nvarchar](255) NULL,
+	[ModifiedDate] [datetime2](7) NULL,
+	[Action] [nvarchar](50) NOT NULL,
+	[Field] [nvarchar](255) NULL,
+	[OldValue] [nvarchar](max) NULL,
+	[NewValue] [nvarchar](max) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[LogID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationActions_Changes_Log]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationActions_Changes_Log](
+	[ObservationID] [int] NULL,
+	[ActionPlanID] [int] NULL,
+	[ChangeType] [varchar](255) NULL,
+	[ChangeTimestamp] [datetime] NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationAffectedBusinessAreas]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationAffectedBusinessAreas](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[BusinessAreaID] [int] NOT NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [pk_ObservationIDBusinessAreaID] PRIMARY KEY CLUSTERED 
+(
+	[ObservationID] ASC,
+	[BusinessAreaID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationAffectedBusinessUnits]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationAffectedBusinessUnits](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[BusinessUnitID] [int] NOT NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [pk_ObservationIDBusinessUnitID] PRIMARY KEY CLUSTERED 
+(
+	[ObservationID] ASC,
+	[BusinessUnitID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationAffectedCountries]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationAffectedCountries](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[CountryID] [int] NOT NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [pk_ObservationIDCountryID] PRIMARY KEY CLUSTERED 
+(
+	[ObservationID] ASC,
+	[CountryID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationAffectedLegalEntities]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationAffectedLegalEntities](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[LegalEntityID] [int] NOT NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [pk_ObservationIDLegalEntityID] PRIMARY KEY CLUSTERED 
+(
+	[ObservationID] ASC,
+	[LegalEntityID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationBinaryFields]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationBinaryFields](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[RelatedToESG] [bit] NULL,
+	[ESGJustification] [nvarchar](max) NULL,
+	[RelatedToConductRisk] [bit] NULL,
+	[ConductRiskJustification] [nvarchar](max) NULL,
+	[IsSelfRaised] [bit] NULL,
+	[IsSelfRaisedJustification] [nvarchar](max) NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [PK_ObservationBinaryFields] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationCategory]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationCategory](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Value] [int] NOT NULL,
+	[Description] [nvarchar](max) NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_ObservationCategory] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationComment]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationComment](
+	[CommentID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NULL,
+	[Comment] [nvarchar](max) NULL,
+	[Date] [datetime] NOT NULL,
+	[User] [nvarchar](10) NOT NULL,
+	[LineOfDefenceId] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[CommentID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationDetails]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationDetails](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[CountryID] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationGrade]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationGrade](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[GradeID] [int] NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[ModifiedBy] [varchar](10) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationRagStatus]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationRagStatus](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[CurrentRAGStatusID] [int] NOT NULL,
+	[ObservationID] [int] NOT NULL,
+	[Comment] [varchar](250) NULL,
+	[ModifiedBy] [varchar](10) NULL,
+ CONSTRAINT [PK_ObservationRAGStatus] PRIMARY KEY CLUSTERED 
+(
+	[ObservationID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ObservationStatus]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ObservationStatus](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+	[Color] [varchar](50) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_ObservationStatus] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RAGStatus]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RAGStatus](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NULL,
+	[Color] [varchar](50) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_RAG] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Regulation]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Regulation](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[HasComment] [bit] NOT NULL,
+ CONSTRAINT [PK_Regulation] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RegulatoryCategory]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RegulatoryCategory](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[TaxonomyLevel3ID] [int] NULL,
+	[AppliedRegulation] [nvarchar](max) NULL,
+ CONSTRAINT [PK_RegulatoryCategory] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Roles]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Roles](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[Description] [nvarchar](250) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_Roles] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RolesLineOfDefense]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RolesLineOfDefense](
+	[RoleID] [int] NOT NULL,
+	[LineOfDefenseID] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[RoleID] ASC,
+	[LineOfDefenseID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[StatusRequest]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[StatusRequest](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[TemplateName] [varchar](250) NULL,
+	[TemplateLocation] [varchar](250) NULL,
+ CONSTRAINT [PK_ObservationStatusRequest1] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Table_1]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Table_1](
+	[id] [int] IDENTITY(1,1) NOT NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Taxonomies]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Taxonomies](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](200) NULL,
+	[Description] [nvarchar](500) NULL,
+	[IsActive] [bit] NOT NULL,
+	[LevelID] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TaxonomiesRelations]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TaxonomiesRelations](
+	[TaxonomyID] [int] NOT NULL,
+	[TaxonomySubLevelID] [int] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[TaxonomyID] ASC,
+	[TaxonomySubLevelID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TaxonomyLevels]    Script Date: 2024-07-11 12:18:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TaxonomyLevels](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Level] [int] NOT NULL,
+	[Name] [nvarchar](150) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[IsMandatory] [bit] NULL,
+ CONSTRAINT [PK_TaxonomyLevels1] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[AuthorisationAccessPermissions] ADD  DEFAULT ((0)) FOR [ApproverAccess]
+GO
+ALTER TABLE [dbo].[AuthorisationAccessPermissions] ADD  DEFAULT ((0)) FOR [AdminAccess]
+GO
+ALTER TABLE [dbo].[AuthorisationBusinessAreas] ADD  DEFAULT ((0)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[AuthorisationBusinessUnits] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[AuthorisationLegalEntities] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[BusinessArea] ADD  DEFAULT ((1)) FOR [BusinessUnitID]
+GO
+ALTER TABLE [dbo].[BusinessArea] ADD  DEFAULT ('FALSE') FOR [LegalEntity]
+GO
+ALTER TABLE [dbo].[BusinessArea] ADD  DEFAULT ((0)) FOR [IsDefault]
+GO
+ALTER TABLE [dbo].[BusinessAreaToBusinessUnit] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[LegalEntityToBusinessUnit] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[Observation] ADD  CONSTRAINT [df_CreationDate]  DEFAULT (getdate()) FOR [CreationDate]
+GO
+ALTER TABLE [dbo].[Observation] ADD  CONSTRAINT [df_GroupObservation]  DEFAULT ((0)) FOR [GroupObservation]
+GO
+ALTER TABLE [dbo].[Observation] ADD  CONSTRAINT [df_BusinessUnitID]  DEFAULT ((19)) FOR [BusinessUnitID]
+GO
+ALTER TABLE [dbo].[Observation] ADD  CONSTRAINT [df_CategoryID]  DEFAULT ((12)) FOR [CategoryID]
+GO
+ALTER TABLE [dbo].[Observation] ADD  CONSTRAINT [df_RagStatusID]  DEFAULT ((5)) FOR [RAGStatusID]
+GO
+ALTER TABLE [dbo].[Observation] ADD  DEFAULT ((0)) FOR [SubmittedForClosure]
+GO
+ALTER TABLE [dbo].[Observation_Changes_Log] ADD  DEFAULT ('Modified') FOR [Action]
+GO
+ALTER TABLE [dbo].[ObservationActions] ADD  CONSTRAINT [DF_ObservationActions_ModifiedDate]  DEFAULT (getdate()) FOR [ModifiedDate]
+GO
+ALTER TABLE [dbo].[ObservationActions] ADD  CONSTRAINT [DF_ObservationActions_PeriodStart]  DEFAULT (sysutcdatetime()) FOR [PeriodStart]
+GO
+ALTER TABLE [dbo].[ObservationActions] ADD  CONSTRAINT [DF_ObservationActions_PeriodEnd]  DEFAULT (CONVERT([datetime2],'9999-12-31 23:59:59.9999999')) FOR [PeriodEnd]
+GO
+ALTER TABLE [dbo].[ObservationBusinessAreas] ADD  CONSTRAINT [DF_ObservationBusinessAreas_PeriodStart]  DEFAULT (sysutcdatetime()) FOR [PeriodStart]
+GO
+ALTER TABLE [dbo].[ObservationBusinessAreas] ADD  CONSTRAINT [DF_ObservationBusinessAreas_PeriodEnd]  DEFAULT (CONVERT([datetime2],'9999-12-31 23:59:59.9999999')) FOR [PeriodEnd]
+GO
+ALTER TABLE [dbo].[ObservationCategory] ADD  DEFAULT ((0)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[ObservationFiles] ADD  DEFAULT ((0)) FOR [GDPR]
+GO
+ALTER TABLE [dbo].[ObservationFiles] ADD  DEFAULT ((10)) FOR [RetentionPeriod]
+GO
+ALTER TABLE [dbo].[ObservationFiles] ADD  CONSTRAINT [DF_ObservationFiles_PeriodStart]  DEFAULT (sysutcdatetime()) FOR [PeriodStart]
+GO
+ALTER TABLE [dbo].[ObservationFiles] ADD  CONSTRAINT [DF_ObservationFiles_PeriodEnd]  DEFAULT (CONVERT([datetime2],'9999-12-31 23:59:59.9999999')) FOR [PeriodEnd]
+GO
+ALTER TABLE [dbo].[ObservationLegalEntities] ADD  CONSTRAINT [DF_ObservationLegalEntities_PeriodStart]  DEFAULT (sysutcdatetime()) FOR [PeriodStart]
+GO
+ALTER TABLE [dbo].[ObservationLegalEntities] ADD  CONSTRAINT [DF_ObservationLegalEntities_PeriodEnd]  DEFAULT (CONVERT([datetime2],'9999-12-31 23:59:59.9999999')) FOR [PeriodEnd]
+GO
+ALTER TABLE [dbo].[ObservationRegCategories] ADD  CONSTRAINT [DF_ObservationRegCategories_PeriodStart]  DEFAULT (sysutcdatetime()) FOR [PeriodStart]
+GO
+ALTER TABLE [dbo].[ObservationRegCategories] ADD  CONSTRAINT [DF_ObservationRegCategories_PeriodEnd]  DEFAULT (CONVERT([datetime2],'9999-12-31 23:59:59.9999999')) FOR [PeriodEnd]
+GO
+ALTER TABLE [dbo].[ObservationRegulations] ADD  CONSTRAINT [DF_ObservationRegulations_PeriodStart]  DEFAULT (sysutcdatetime()) FOR [PeriodStart]
+GO
+ALTER TABLE [dbo].[ObservationRegulations] ADD  CONSTRAINT [DF_ObservationRegulations_PeriodEnd]  DEFAULT (CONVERT([datetime2],'9999-12-31 23:59:59.9999999')) FOR [PeriodEnd]
+GO
+ALTER TABLE [dbo].[ObservationSelfRaisedIssue] ADD  CONSTRAINT [DF_ObservationSelfRaisedIssue_PeriodStart]  DEFAULT (sysutcdatetime()) FOR [PeriodStart]
+GO
+ALTER TABLE [dbo].[ObservationSelfRaisedIssue] ADD  CONSTRAINT [DF_ObservationSelfRaisedIssue_PeriodEnd]  DEFAULT (CONVERT([datetime2],'9999-12-31 23:59:59.9999999')) FOR [PeriodEnd]
+GO
+ALTER TABLE [dbo].[ObservationTaxonomies] ADD  CONSTRAINT [DF_ObservationTaxonomies_PeriodStart]  DEFAULT (sysutcdatetime()) FOR [PeriodStart]
+GO
+ALTER TABLE [dbo].[ObservationTaxonomies] ADD  CONSTRAINT [DF_ObservationTaxonomies_PeriodEnd]  DEFAULT (CONVERT([datetime2],'9999-12-31 23:59:59.9999999')) FOR [PeriodEnd]
+GO
+ALTER TABLE [dbo].[RAGStatus] ADD  DEFAULT ('') FOR [Color]
+GO
+ALTER TABLE [dbo].[RAGStatus] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[Taxonomies] ADD  DEFAULT ('1') FOR [LevelID]
+GO
+ALTER TABLE [dbo].[TaxonomiesRelations] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[AuthorisationAccessPermissions]  WITH CHECK ADD  CONSTRAINT [FK_RoleAccess_Permissions_Roles] FOREIGN KEY([AuthorisationID])
+REFERENCES [dbo].[Authorisations] ([ID])
+GO
+ALTER TABLE [dbo].[AuthorisationAccessPermissions] CHECK CONSTRAINT [FK_RoleAccess_Permissions_Roles]
+GO
+ALTER TABLE [dbo].[AuthorisationBusinessUnits]  WITH CHECK ADD  CONSTRAINT [FK_AuthorizationBusiness_Units_Authorizations] FOREIGN KEY([AuthorisationID])
+REFERENCES [dbo].[Authorisations] ([ID])
+GO
+ALTER TABLE [dbo].[AuthorisationBusinessUnits] CHECK CONSTRAINT [FK_AuthorizationBusiness_Units_Authorizations]
+GO
+ALTER TABLE [dbo].[AuthorisationBusinessUnits]  WITH CHECK ADD  CONSTRAINT [FK_AuthorizationBusiness_Units_BusinessUnit] FOREIGN KEY([BusinessUnitID])
+REFERENCES [dbo].[BusinessUnit] ([ID])
+GO
+ALTER TABLE [dbo].[AuthorisationBusinessUnits] CHECK CONSTRAINT [FK_AuthorizationBusiness_Units_BusinessUnit]
+GO
+ALTER TABLE [dbo].[BusinessArea]  WITH CHECK ADD  CONSTRAINT [fk_BusinessUnitID] FOREIGN KEY([BusinessUnitID])
+REFERENCES [dbo].[BusinessUnit] ([ID])
+GO
+ALTER TABLE [dbo].[BusinessArea] CHECK CONSTRAINT [fk_BusinessUnitID]
+GO
+ALTER TABLE [dbo].[Observation]  WITH CHECK ADD  CONSTRAINT [FK_Observation_BusinessUnit_BusinessUnitID] FOREIGN KEY([BusinessUnitID])
+REFERENCES [dbo].[BusinessUnit] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Observation] CHECK CONSTRAINT [FK_Observation_BusinessUnit_BusinessUnitID]
+GO
+ALTER TABLE [dbo].[Observation]  WITH CHECK ADD  CONSTRAINT [FK_Observation_Observation_GroupObservationID] FOREIGN KEY([GroupObservationID])
+REFERENCES [dbo].[Observation] ([ID])
+GO
+ALTER TABLE [dbo].[Observation] CHECK CONSTRAINT [FK_Observation_Observation_GroupObservationID]
+GO
+ALTER TABLE [dbo].[Observation]  WITH CHECK ADD  CONSTRAINT [FK_Observation_ObservationCategory_ObservationCategoryID] FOREIGN KEY([CategoryID])
+REFERENCES [dbo].[ObservationCategory] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Observation] CHECK CONSTRAINT [FK_Observation_ObservationCategory_ObservationCategoryID]
+GO
+ALTER TABLE [dbo].[Observation]  WITH CHECK ADD  CONSTRAINT [FK_Observation_RAGStatus] FOREIGN KEY([RAGStatusID])
+REFERENCES [dbo].[RAGStatus] ([ID])
+GO
+ALTER TABLE [dbo].[Observation] CHECK CONSTRAINT [FK_Observation_RAGStatus]
+GO
+ALTER TABLE [dbo].[ObservationActions]  WITH CHECK ADD FOREIGN KEY([TaxonomyLevel3ID])
+REFERENCES [dbo].[Taxonomies] ([ID])
+GO
+ALTER TABLE [dbo].[ObservationActions]  WITH CHECK ADD  CONSTRAINT [FK_ObservationActions_BusinessArea_BusinessAreaID] FOREIGN KEY([BusinessAreaID])
+REFERENCES [dbo].[BusinessArea] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ObservationActions] CHECK CONSTRAINT [FK_ObservationActions_BusinessArea_BusinessAreaID]
+GO
+ALTER TABLE [dbo].[ObservationAffectedBusinessAreas]  WITH CHECK ADD  CONSTRAINT [FK_ObservationAffectedBusinessAreas_BusinessArea] FOREIGN KEY([BusinessAreaID])
+REFERENCES [dbo].[BusinessArea] ([ID])
+GO
+ALTER TABLE [dbo].[ObservationAffectedBusinessAreas] CHECK CONSTRAINT [FK_ObservationAffectedBusinessAreas_BusinessArea]
+GO
+ALTER TABLE [dbo].[ObservationAffectedBusinessUnits]  WITH CHECK ADD  CONSTRAINT [FK_ObservationAffectedBusinessUnits_BusinessUnit] FOREIGN KEY([BusinessUnitID])
+REFERENCES [dbo].[BusinessUnit] ([ID])
+GO
+ALTER TABLE [dbo].[ObservationAffectedBusinessUnits] CHECK CONSTRAINT [FK_ObservationAffectedBusinessUnits_BusinessUnit]
+GO
+ALTER TABLE [dbo].[ObservationAffectedCountries]  WITH CHECK ADD  CONSTRAINT [FK_ObservationAffectedCountries_Country] FOREIGN KEY([CountryID])
+REFERENCES [dbo].[Country] ([ID])
+GO
+ALTER TABLE [dbo].[ObservationAffectedCountries] CHECK CONSTRAINT [FK_ObservationAffectedCountries_Country]
+GO
+ALTER TABLE [dbo].[ObservationAffectedLegalEntities]  WITH CHECK ADD  CONSTRAINT [FK_ObservationAffectedLegalEntities_LegalEntities] FOREIGN KEY([LegalEntityID])
+REFERENCES [dbo].[LegalEntity] ([ID])
+GO
+ALTER TABLE [dbo].[ObservationAffectedLegalEntities] CHECK CONSTRAINT [FK_ObservationAffectedLegalEntities_LegalEntities]
+GO
+ALTER TABLE [dbo].[ObservationBinaryFields]  WITH CHECK ADD  CONSTRAINT [FK_ObservationBinaryFields_Observation] FOREIGN KEY([ObservationID])
+REFERENCES [dbo].[Observation] ([ID])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ObservationBinaryFields] CHECK CONSTRAINT [FK_ObservationBinaryFields_Observation]
+GO
+ALTER TABLE [dbo].[ObservationBusinessAreas]  WITH CHECK ADD FOREIGN KEY([CountryID])
+REFERENCES [dbo].[Country] ([ID])
+GO
+ALTER TABLE [dbo].[ObservationBusinessAreas]  WITH CHECK ADD  CONSTRAINT [FK_ObservationBusinessAreas_BusinessArea_BusinessAreaID] FOREIGN KEY([BusinessAreaID])
+REFERENCES [dbo].[BusinessArea] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ObservationBusinessAreas] CHECK CONSTRAINT [FK_ObservationBusinessAreas_BusinessArea_BusinessAreaID]
+GO
+ALTER TABLE [dbo].[ObservationDetails]  WITH CHECK ADD FOREIGN KEY([CountryID])
+REFERENCES [dbo].[Country] ([ID])
+GO
+ALTER TABLE [dbo].[ObservationDetails]  WITH CHECK ADD FOREIGN KEY([ObservationID])
+REFERENCES [dbo].[Observation] ([ID])
+GO
+ALTER TABLE [dbo].[ObservationGrade]  WITH CHECK ADD  CONSTRAINT [FK_ObservationGrade_Observation] FOREIGN KEY([ObservationID])
+REFERENCES [dbo].[Observation] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ObservationGrade] CHECK CONSTRAINT [FK_ObservationGrade_Observation]
+GO
+ALTER TABLE [dbo].[ObservationRegCategories]  WITH CHECK ADD  CONSTRAINT [FK_ObservationRegCategories_RegulatoryCategory_RegulatoryCategoryID] FOREIGN KEY([RegulatoryCategoryID])
+REFERENCES [dbo].[RegulatoryCategory] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ObservationRegCategories] CHECK CONSTRAINT [FK_ObservationRegCategories_RegulatoryCategory_RegulatoryCategoryID]
+GO
+ALTER TABLE [dbo].[ObservationRegulations]  WITH CHECK ADD  CONSTRAINT [FK_ObservationRegulations_Regulation_RegulationID] FOREIGN KEY([RegulationID])
+REFERENCES [dbo].[Regulation] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ObservationRegulations] CHECK CONSTRAINT [FK_ObservationRegulations_Regulation_RegulationID]
+GO
+ALTER TABLE [dbo].[RolesLineOfDefense]  WITH CHECK ADD FOREIGN KEY([LineOfDefenseID])
+REFERENCES [dbo].[LinesOfDefense] ([ID])
+GO
+ALTER TABLE [dbo].[RolesLineOfDefense]  WITH CHECK ADD FOREIGN KEY([LineOfDefenseID])
+REFERENCES [dbo].[LinesOfDefense] ([ID])
+GO
+ALTER TABLE [dbo].[RolesLineOfDefense]  WITH CHECK ADD FOREIGN KEY([RoleID])
+REFERENCES [dbo].[Roles] ([ID])
+GO
+ALTER TABLE [dbo].[Taxonomies]  WITH CHECK ADD  CONSTRAINT [FK_Taxonomies_TaxonomyLevels] FOREIGN KEY([LevelID])
+REFERENCES [dbo].[TaxonomyLevels] ([ID])
+GO
+ALTER TABLE [dbo].[Taxonomies] CHECK CONSTRAINT [FK_Taxonomies_TaxonomyLevels]
+GO
