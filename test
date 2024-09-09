@@ -1,0 +1,254 @@
+using System;
+using System.Linq;
+using FluentAssertions;
+using WJCS.Common.UnitTest;
+using WJCS.Internal.Application.ExternalServices.CustomerRecognition.Models.CompanyRelations;
+using WJCS.Internal.Application.ExternalServices.WelcomingCase.Models.Corporates;
+using WJCS.Internal.Infrastructure.ExternalServices.WelcomingCase.Models.V3;
+using WJCS.Shared.Domain.Enums;
+using Xunit;
+
+namespace WJCS.Internal.Infrastructure.UnitTest.ExternalServices.WelcomingCase.Mappings;
+public class CreateCorporateWelcomingMappingsTest : MappingTestsFixture
+{
+    [Theory, AutoMoqData]
+    public void When_CreateCorporateCaseModel_MappingTo_CreateCorporateCaseRequest_Called_Should_ReturnProperResponse(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+    }
+
+    [Theory, AutoMoqData]
+    public void When_Mapping_Called_CreateCorporateCaseModel_Should_MapTo_Empty_Addresses_When_CompanyAddresses_AreNull(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Addresses = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+        result.CaseSubject.Address.City.Should().Be(null);
+    }
+
+    [Theory, AutoMoqData]
+    public void When_MappingPerformedToCreateCorporateCaseRequest_Should_SetOrderingCaseAndLeadIndicationToTrue(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+        result.CreateOrderingCase.Should().BeTrue();
+        result.CreateLeadIndication.Should().BeTrue();
+    }
+
+    [Theory, AutoMoqData]
+    public void When_Mapping_Called_CreateCorporateCaseModel_Should_Check_InternalCustomerInfo_IsNull(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.Individual.InternalCustomerInfo = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+        result.CaseSubject.SubmitStakeholders.FirstOrDefault().CustomerHoldingBranch.Should().NotBeNull();
+        result.CaseSubject.SubmitStakeholders.FirstOrDefault().CustomerGroupCode.Should().NotBeNull();
+        result.CaseSubject.SubmitStakeholders.FirstOrDefault().CalculatePriceParticipant.Should().Be(true);
+    }
+
+    [Theory, AutoMoqData]
+    public void When_Mapping_Called_CreateCorporateCaseModel_Should_Check_InternalCustomerInfo_IfExistingCustomer(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.Individual.InternalCustomerInfo.BasicInfo.IsExistingCustomer = true;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+        result.CaseSubject.SubmitStakeholders.FirstOrDefault().CustomerHoldingBranch.Should().BeNull();
+        result.CaseSubject.SubmitStakeholders.FirstOrDefault().CustomerGroupCode.Should().BeNull();
+        result.CaseSubject.SubmitStakeholders.FirstOrDefault().CalculatePriceParticipant.Should().Be(true);
+    }
+
+    [Theory, AutoMoqData]
+    public void When_Mapping_Called_CreateCorporateCaseModel_Should_Check_InternalCustomerInfo_IfNotExistingCustomer(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.Individual.InternalCustomerInfo.BasicInfo.IsExistingCustomer = false;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+        result.CaseSubject.SubmitStakeholders.FirstOrDefault().CustomerHoldingBranch.Should().NotBeNull();
+        result.CaseSubject.SubmitStakeholders.FirstOrDefault().CustomerGroupCode.Should().NotBeNull();
+    }
+
+    [Theory, AutoMoqData]
+    public void When_Mapping_Called_CreateCorporateCaseModel_Should_Check_CompanyHomepage_IsNull(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.ContactInformation.WebsiteAddresses = Array.Empty<string>();
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+        result.CaseSubject.CompanyHomepage.Should().BeNull();
+    }
+
+    [Theory, AutoMoqData]
+    public void When_Mapping_Called_CreateCorporateCaseModel_Should_Check_CompanyHomepage_IsNotNull_RemoveHttpFromString(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+        result.CaseSubject.CompanyHomepage.Should().NotBeNull();
+    }
+
+    [Theory, AutoMoqData]
+    public void When_Mapping_Called_CreateCorporateCaseModel_Should_Check_AmlConnection_Role_IsNull(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.LegalEntityAssociation.Roles = Array.Empty<Role>();
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+        if (createCorporateCaseModel.CorporateJourneyContext.CorporateJourneyContextKey == Domain.Enums.CorporateJourneyContextKeys.WJC_DK_SmallCorporates ||
+            createCorporateCaseModel.CorporateJourneyContext.CorporateJourneyContextKey == Domain.Enums.CorporateJourneyContextKeys.WJC_DK_SmallCorporates_CDD_Only)
+        {
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.Should().BeNull();
+        }
+        else
+        {
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.BeneficialOwner.OwnershipPercentage.Should().Be(100.0);
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.BeneficialOwner.VotingRightsPercentage.Should().Be(100.0);
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.Signatory.Role.Should().Be(SignatoryRole.PowerOfAttorney);
+        }
+    }
+
+    [Theory, AutoMoqData]
+    public void When_Mapping_Called_CreateCorporateCaseModel_Should_Check_AmlConnection_Ownership_IsNotNull(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        var role = createCorporateCaseModel.LegalEntityAssociation.Roles.FirstOrDefault();
+        role.Title = "INTERESSENTER";
+        role.Description = "INTERESSENTER";
+        role.Ownership.FirstOrDefault().Type = "ShareCapital";
+        role.Ownership.FirstOrDefault().Percentage = "90.0";
+        role.Ownership.LastOrDefault().Type = "VotingRights";
+        role.Ownership.LastOrDefault().Percentage = "90.0";
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+
+        if (createCorporateCaseModel.CorporateJourneyContext.CorporateJourneyContextKey == Domain.Enums.CorporateJourneyContextKeys.WJC_DK_SmallCorporates ||
+            createCorporateCaseModel.CorporateJourneyContext.CorporateJourneyContextKey == Domain.Enums.CorporateJourneyContextKeys.WJC_DK_SmallCorporates_CDD_Only)
+        {
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.Should().BeNull();
+        }
+        else
+        {
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.BeneficialOwner.OwnershipPercentage.Should().Be(100.0);
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.BeneficialOwner.VotingRightsPercentage.Should().Be(100.0);
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.Signatory.Role.Should().Be(SignatoryRole.PowerOfAttorney);
+        }
+    }
+
+    [Theory, AutoMoqData]
+    public void When_Mapping_Called_CreateCorporateCaseModel_Should_Check_AmlConnection_Role_IsNot_Interessenter(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.LegalEntityAssociation.Roles.FirstOrDefault().Title = "BENEFICIALOWNER";
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+        if (createCorporateCaseModel.CorporateJourneyContext.CorporateJourneyContextKey == Domain.Enums.CorporateJourneyContextKeys.WJC_DK_Soletrader)
+        {
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.BeneficialOwner.OwnershipPercentage.Should().Be(100.0);
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.BeneficialOwner.VotingRightsPercentage.Should().Be(100.0);
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.Signatory.Role.Should().Be(SignatoryRole.PowerOfAttorney);
+        }
+        else
+        {
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.Should().BeNull();
+        }
+    }
+
+    [Theory, AutoMoqData]
+    public void When_Mapping_Called_CreateCorporateCaseModel_Should_Check_AmlConnection_Ownership_IsNull(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        createCorporateCaseModel.CorporateJourneyContext.Channel = Domain.Enums.Channels.WJ_CS;
+        createCorporateCaseModel.LegalEntityAssociation.Roles.FirstOrDefault().Ownership = Array.Empty<Ownership>();
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation = null!;
+        createCorporateCaseModel.Corporate.PublicRegistryInfo.Dates.DateOfRegistration = null!;
+        createCorporateCaseModel.Corporate.ExternalCorporateKeyType = ExternalCustomerKeyTypes.DK_SSN;
+        createCorporateCaseModel.Individual.ExternalCustomerKeyType = ExternalCustomerKeyTypes.DK_SSN;
+
+        var result = Mapper.Map<CreateCorporateCaseRequest>(createCorporateCaseModel);
+
+        result.Should().NotBeNull();
+        if (createCorporateCaseModel.CorporateJourneyContext.CorporateJourneyContextKey == Domain.Enums.CorporateJourneyContextKeys.WJC_DK_SmallCorporates ||
+            createCorporateCaseModel.CorporateJourneyContext.CorporateJourneyContextKey == Domain.Enums.CorporateJourneyContextKeys.WJC_DK_SmallCorporates_CDD_Only)
+        {
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.Should().BeNull();
+        }
+        else
+        {
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.BeneficialOwner.OwnershipPercentage.Should().Be(100.0);
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.BeneficialOwner.VotingRightsPercentage.Should().Be(100.0);
+            result.CaseSubject.SubmitStakeholders.FirstOrDefault().AmlConnection.Signatory.Role.Should().Be(SignatoryRole.PowerOfAttorney);
+        }
+
+    }
+}
