@@ -1,0 +1,250 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using AutoMapper;
+using AutoMapper.Extensions.EnumMapping;
+using WJCS.Internal.Application.ExternalServices.CustomerRecognition.Models.CompanyRelations;
+using WJCS.Internal.Application.ExternalServices.CustomerRecognition.Models.Individuals;
+using WJCS.Internal.Application.ExternalServices.WelcomingCase.Models.Corporates;
+using WJCS.Internal.Domain.Enums;
+using WJCS.Internal.Infrastructure.ExternalServices.WelcomingCase.Models.V3;
+using WJCS.Shared.Domain.Enums;
+
+namespace WJCS.Internal.Infrastructure.ExternalServices.WelcomingCase.MappingProfile;
+public class CreateCorporateWelcomingRequestProfile : Profile
+{
+    public CreateCorporateWelcomingRequestProfile()
+    {
+        CreateMap<MarketAreas, CorporateCaseContextMarketArea>().ConvertUsingEnumMapping(opt => opt.MapByName());
+        CreateMap<CustomerGroups, CorporateSubjectCustomerGroupCode>().ConvertUsingEnumMapping(opt => opt.MapByName());
+        CreateMap<CustomerGroups, StakeholderCustomerGroupCode>().ConvertUsingEnumMapping(opt => opt.MapByName());
+        CreateMap<Shared.Domain.Enums.KycRoles, CorporateSubjectKycRole>().ConvertUsingEnumMapping(opt => opt.MapByName());
+        CreateMap<ExternalCustomerKeyTypes, PersonExternalKeyType>().ConvertUsingEnumMapping(opt => opt.MapByName());
+        CreateMap<Channels, CorporateCaseContextChannel>().ConvertUsingEnumMapping(opt => opt.MapByName());
+        CreateMap<BusinessAreas, CorporateCaseContextBusinessArea>().ConvertUsingEnumMapping(opt => opt
+            .MapValue(BusinessAreas.DanskeBank, CorporateCaseContextBusinessArea.DanskeBank)
+        );
+
+        CreateMap<Languages, CorporateCaseContextLanguage>().ConvertUsingEnumMapping(opt => opt
+          .MapValue(Languages.DA, CorporateCaseContextLanguage.DA)
+          .MapValue(Languages.SE, CorporateCaseContextLanguage.SV)
+          .MapValue(Languages.NO, CorporateCaseContextLanguage.NO)
+          .MapValue(Languages.FI, CorporateCaseContextLanguage.FI)
+          .MapValue(Languages.EN, CorporateCaseContextLanguage.EN)
+        );
+
+        CreateMap<CorporateRoles, Roles>().ConvertUsingEnumMapping(opt => opt
+          .MapValue(CorporateRoles.BeneficialOwner, Roles.BeneficialOwner)
+          .MapValue(CorporateRoles.AuthorizedSignatory, Roles.Signatory)
+          .MapValue(CorporateRoles.Applicant, Roles.Representative)
+        );
+
+        CreateMap<ExternalCustomerKeyTypes, CorporateExternalKeyType>().ConvertUsingEnumMapping(opt => opt
+            .MapValue(ExternalCustomerKeyTypes.DK_CVR, CorporateExternalKeyType.DK_CVR)
+            .MapValue(ExternalCustomerKeyTypes.DK_SSN, CorporateExternalKeyType.Empty)
+        );
+
+        CreateMap<CreateCorporateCaseModel, CreateCorporateCaseRequest>()
+          .ForPath(d => d.CaseContext.Channel, opt => opt.MapFrom(s => s.CorporateJourneyContext.Channel))
+          .ForPath(d => d.CaseContext.BusinessArea, opt => opt.MapFrom(s => s.CorporateJourneyContext.BusinessArea))
+          .ForPath(d => d.CaseContext.MarketArea, opt => opt.MapFrom(s => s.CorporateJourneyContext.MarketArea))
+          .ForPath(d => d.CaseContext.Language, opt => opt.MapFrom(s => s.CorporateJourneyContext.Language))
+          .ForPath(d => d.CaseContext.PrimaryContactPersonExt.FirstName, opt => opt.MapFrom(s => s.Individual.PublicRegistryInfo.FirstName))
+          .ForPath(d => d.CaseContext.PrimaryContactPersonExt.LastName, opt => opt.MapFrom(s => s.Individual.PublicRegistryInfo.LastName))
+          .ForPath(d => d.CaseContext.PrimaryContactPersonExt.PhoneNumber, opt => opt.MapFrom(s => CaseContextPhoneNumber(s.Individual.InternalCustomerInfo.BasicInfo.ContactInformation)))
+          .ForPath(d => d.CaseContext.PrimaryContactPersonExt.Email, opt => opt.MapFrom(s => CaseContextEmail(s.Individual.InternalCustomerInfo.BasicInfo.ContactInformation)))
+
+          .ForPath(d => d.CaseSubject.ExternalKey.Value, opt => opt.MapFrom(s => s.Corporate.ExternalCorporateKey))
+          .ForPath(d => d.CaseSubject.ExternalKey.Type, opt => opt.MapFrom(s => s.Corporate.ExternalCorporateKeyType))
+
+          .ForPath(d => d.CaseSubject.CustomerHoldingBranch, opt => opt.MapFrom(s => s.CorporateJourneyContext.CorporateJourneyContextParameters.CustomerHoldingBranch))
+
+          .ForPath(d => d.CaseSubject.CompanyName.Name, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Names.Name))
+          .ForPath(d => d.CaseSubject.CompanyName.ReferencedBy, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Names.ReferencedBy))
+
+          .ForPath(d => d.CaseSubject.Address.PostOfficeBox, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault().PostOfficeBox))
+          .ForPath(d => d.CaseSubject.Address.CountryCode, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault().CountryCode))
+          .ForPath(d => d.CaseSubject.Address.CoName, opt => opt.MapFrom(s => GetCareOfName(s.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault())))
+          .ForPath(d => d.CaseSubject.Address.StreetName, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault().StreetName))
+          .ForPath(d => d.CaseSubject.Address.HouseNumber, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault().HouseNumber))
+          .ForPath(d => d.CaseSubject.Address.Floor, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault().Floor))
+          .ForPath(d => d.CaseSubject.Address.Side, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault().Side))
+          .ForPath(d => d.CaseSubject.Address.PostalCode, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault().PostalCode))
+          .ForPath(d => d.CaseSubject.Address.City, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault().CityNameOrNullIfExceedsLength20))
+          .ForPath(d => d.CaseSubject.Address.Village, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault().Village))
+
+          .ForPath(d => d.CaseSubject.CustomerGroupCode, opt => opt.MapFrom(s => s.CorporateJourneyContext.CorporateJourneyContextParameters.CustomerGroup))
+
+          .ForPath(d => d.CaseSubject.PrimaryBusinessCode, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.PrimaryBusiness.Code))
+
+          .ForPath(d => d.CaseSubject.OwnershipCode, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.OwnershipInformationInternal.Type))
+
+          .ForPath(d => d.CaseSubject.CompanyHomepage, opt => opt.MapFrom(s => RemoveHttpFromString(s.Corporate.PublicRegistryInfo.ContactInformation.WebsiteAddresses.FirstOrDefault())))
+
+          .ForPath(d => d.CaseSubject.KycRole, opt => opt.MapFrom(s => s.CorporateJourneyContext.CorporateJourneyContextParameters.KycRole))
+
+          .ForPath(d => d.CaseSubject.RegistrationDate, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Dates.DateOfRegistration))
+          .ForPath(d => d.CaseSubject.IncorporationDate, opt => opt.MapFrom(s => s.Corporate.PublicRegistryInfo.Dates.DateOfIncorporation))
+
+          .ForPath(d => d.CaseSubject.SubmitStakeholders, opt => opt.MapFrom(s => GetStakeHolder(s)))
+          .ForPath(d => d.CaseSubject.ContactPersons, opt => opt.MapFrom(s => GetContactPersons(s)))
+          .ForPath(d => d.CaseSubject.CddCase.BusinessArea, opt => opt.MapFrom(s => s.CorporateJourneyContext.BusinessArea))
+          .ForPath(d => d.CaseSubject.CddCase.MarketArea, opt => opt.MapFrom(s => s.CorporateJourneyContext.MarketArea))
+          .ForPath(d => d.CaseSubject.CddCase.Origination, opt => opt.Ignore())
+          .ForMember(d => d.Id, opt => opt.Ignore())
+          .ForMember(d => d.CaseGroupId, opt => opt.Ignore())
+          .ForMember(d => d.CreateOrderingCase, opt => opt.MapFrom(s => s.CorporateJourneyContext.CorporateJourneyContextParameters.HasOrderingCase))
+          .ForMember(d => d.CreateLeadIndication, opt => opt.MapFrom(s => s.CorporateJourneyContext.CorporateJourneyContextParameters.HasOrderingCase));
+    }
+
+    private static string? GetCareOfName(Application.ExternalServices.CustomerRecognition.Models.Corporates.CompanyAddress? companyAddress)
+    {
+        var markCare = companyAddress?.AddressMarkings?.MarkCare;
+        return markCare is { Length: > 32 } ? markCare[..32] : markCare;
+    }
+
+    //TODO: this should be changed to mapper map
+    private static ICollection<Stakeholder> GetStakeHolder(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        var result = new List<Stakeholder>();
+        var isLivingAbroad = createCorporateCaseModel.Individual.PublicRegistryInfo.Identity.IsLivingAbroad;
+        var address = createCorporateCaseModel.Individual.PublicRegistryInfo.Address;
+        var isExistingCustomer = createCorporateCaseModel.Individual.InternalCustomerInfo?.BasicInfo.IsExistingCustomer ?? false;
+        result.Add(new Stakeholder
+        {
+            Address = isLivingAbroad ? null : new Models.V3.Address
+            {
+                CoName = null,
+                StreetName = address.StreetName,
+                HouseNumber = address.HouseNumber,
+                Floor = address.Floor,
+                Side = address.SideDoorNumber,
+                PostalCode = address.PostalCode,
+                Room = null,
+                City = address.CityOrNullIfExceedsLength20,
+                Village = null
+            },
+            FirstName = createCorporateCaseModel.Individual.PublicRegistryInfo.FirstName,
+            LastName = createCorporateCaseModel.Individual.PublicRegistryInfo.LastName,
+            Roles = GetRoleInCompany(createCorporateCaseModel.StakeholderJourneyContext.CorporateRole),
+            ContactEmail = CaseContextEmail(createCorporateCaseModel.Individual.InternalCustomerInfo.BasicInfo.ContactInformation),
+            ContactPhone = CaseContextPhoneNumber(createCorporateCaseModel.Individual.InternalCustomerInfo.BasicInfo.ContactInformation), // TODO: remove this ContactEmail field once the email field will be optional from WPO Side
+            ExternalKey = new PersonExternalKey
+            {
+                Value = createCorporateCaseModel.Individual.ExternalCustomerKey,
+                Type = Enum.Parse<PersonExternalKeyType>(createCorporateCaseModel.Individual.ExternalCustomerKeyType.ToString())
+            },
+
+            CustomerHoldingBranch = isExistingCustomer ? null :
+            createCorporateCaseModel.StakeholderJourneyContext.StakeholderJourneyContextParameters.CustomerHoldingBranch,
+
+            CustomerGroupCode = isExistingCustomer ? null : Enum.Parse<StakeholderCustomerGroupCode>(
+                createCorporateCaseModel.StakeholderJourneyContext.StakeholderJourneyContextParameters.CustomerGroup.ToString()),
+
+            AmlConnection = createCorporateCaseModel.CorporateJourneyContext.CorporateJourneyContextParameters.HasAmlConnection
+            ? new AmlConnection()
+            {
+                BeneficialOwner = new BeneficialOwner()
+                {
+                    OwnershipPercentage = GetPercentage(createCorporateCaseModel.LegalEntityAssociation, "ShareCapital"),
+                    VotingRightsPercentage = GetPercentage(createCorporateCaseModel.LegalEntityAssociation, "VotingRights")
+                },
+                Signatory = new Signatory()
+                {
+                    Role = SignatoryRole.PowerOfAttorney
+                }
+            }
+            : null,
+            CalculatePriceParticipant = true
+        });
+
+        return result;
+    }
+
+    private static ICollection<Roles> GetRoleInCompany(CorporateRoles corporateRole) => corporateRole switch
+    {
+        CorporateRoles.Applicant => new List<Roles> { Roles.Representative },
+        CorporateRoles.BeneficialOwner => new List<Roles> { Roles.BeneficialOwner },
+        CorporateRoles.AuthorizedSignatory => new List<Roles> { Roles.Signatory },
+        _ => throw new ArgumentOutOfRangeException(nameof(corporateRole))
+    };
+
+    // TODO: remove static data once field will be optional from WPO Side
+    private static Models.V3.PhoneNumber? CaseContextPhoneNumber(ContactInformation info)
+    {
+        if (info == null || info.Phones == null || !info.Phones.Any())
+        {
+            return null;
+        }
+
+        var firstPhone = info.Phones.FirstOrDefault();
+        if (firstPhone != null)
+        {
+            return new Models.V3.PhoneNumber
+            {
+                CountryCode = firstPhone.IsdCode.ToString(),
+                Number = firstPhone.Number
+            };
+        }
+
+        return null;
+    }
+
+    // TODO: remove static data once field will be optional from WPO Side
+    private static string? CaseContextEmail(ContactInformation info)
+    {
+        if (info == null)
+        {
+            return null;
+        }
+
+        return info.Emails?.FirstOrDefault()?.Address;
+    }
+
+    private static string? RemoveHttpFromString(string? urlValue)
+    {
+        return urlValue?.Replace("https://", string.Empty).Replace("http://", string.Empty);
+    }
+
+    private static double GetPercentage(LegalEntityAssociation legalEntityAssociation, string ownershipType)
+    {
+        var percentage = legalEntityAssociation.Roles?.FirstOrDefault(x => x.Title.Equals("INTERESSENTER"))?.Ownership?.FirstOrDefault(x => x.Type == ownershipType)?.Percentage;
+        return percentage != null ? double.Parse(percentage, CultureInfo.InvariantCulture) : 100;
+    }
+
+    //TODO: this should be changed to mapper map
+    private static ICollection<Models.V3.CorporateContactPerson> GetContactPersons(CreateCorporateCaseModel createCorporateCaseModel)
+    {
+        var result = new List<Models.V3.CorporateContactPerson>();
+        var address = createCorporateCaseModel.Corporate.PublicRegistryInfo.Addresses.FirstOrDefault();
+        result.Add(new Models.V3.CorporateContactPerson
+        {
+            Address = new Models.V3.CorporateContactPersonAddress
+            {
+                StreetName = address.StreetName,
+                HouseNumber = address.HouseNumber,
+                Floor = address.Floor,
+                Side = address.Side,
+                Room = "NA",
+                CityName = address.CityNameOrNullIfExceedsLength20,
+                Country = address.CountryName,
+                PostalZone = address.PostalCode,
+                CoName = GetCareOfName(address),
+                CountryCode = address.CountryCode,
+                PostOfficeBox = address.PostOfficeBox,
+                Village = address.Village
+            },
+            FirstName = createCorporateCaseModel.Individual.PublicRegistryInfo.FirstName,
+            LastName = createCorporateCaseModel.Individual.PublicRegistryInfo.LastName,
+            Email = CaseContextEmail(createCorporateCaseModel.Individual.InternalCustomerInfo.BasicInfo.ContactInformation),
+            Phone = CaseContextPhoneNumber(createCorporateCaseModel.Individual.InternalCustomerInfo.BasicInfo.ContactInformation),
+            PhoneSms = true,
+            Role = CorporateContactPersonRole.Management,
+            Title = "NA",
+            EmailMarketingConsentGiven = false,
+        });
+
+        return result;
+    }
+}
