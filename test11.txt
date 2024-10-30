@@ -1,0 +1,44 @@
+    public async Task SaveAndUpdateContactDetails(Case @case, UpdateContactDetailsDto contactDetailsDto, Guid caseStakeholderId, CancellationToken cancellationToken)
+    {
+        var welcomingCase = await _welcomingCaseExternalService.GetCorporateWelcomingCase(@case.Id, cancellationToken);
+        var externalCustomerKey = welcomingCase.GetExternalCustomerKeyByStakeholderId(@case.CurrentStakeholder.Id);
+
+        var individualTask = _customerRecognitionExternalService.GetIndividualCustomer(
+           new GetIndividualCustomerModel(
+               externalCustomerKey,
+               @case.CurrentStakeholder.StakeholderJourneyContext.ExternalCustomerKeyType,
+               @case.CurrentStakeholder.StakeholderJourneyContext.MarketArea,
+               @case.CurrentStakeholder.StakeholderJourneyContext.BusinessArea),
+           cancellationToken);
+
+        var corporateTask = _customerRecognitionExternalService.GetCorporateCustomer(
+            new GetCorporateCustomerModel(welcomingCase.CaseSubject.ExternalKey.Value,
+            @case.CaseSubject.CorporateJourneyContext.ExternalCustomerKeyType,
+            @case.CaseSubject.CorporateJourneyContext.MarketArea,
+            @case.CaseSubject.CorporateJourneyContext.BusinessArea),
+            cancellationToken);
+
+        await Task.WhenAll(individualTask, corporateTask);
+
+        var individual = await individualTask;
+        var corporate = await corporateTask;
+
+        if (welcomingCase.CaseSubject.ContactPersons.IsNullOrEmpty())
+        {
+            await Task.WhenAll
+            (
+                SaveAndUpdateContactDetailsInCaseSubject(@case, contactDetailsDto, individual, cancellationToken),
+                InsertContactPersonInCaseSubject(@case, contactDetailsDto, individual, corporate, welcomingCase, cancellationToken),
+                UpdateStakholderContactDetails(@case, contactDetailsDto, individual, welcomingCase, cancellationToken),
+                UpdatePrimaryContactPersonExternal(@case, contactDetailsDto, individual, cancellationToken)
+            );
+            return;
+        }
+        await Task.WhenAll
+        (
+            SaveAndUpdateContactDetailsInCaseSubject(@case, contactDetailsDto, individual, cancellationToken),
+            SaveContactPersonInCaseSubject(@case, contactDetailsDto, individual, corporate, welcomingCase, cancellationToken),
+            UpdateStakholderContactDetails(@case, contactDetailsDto, individual, welcomingCase, cancellationToken),
+            UpdatePrimaryContactPersonExternal(@case, contactDetailsDto, individual, cancellationToken)
+        );
+    }
